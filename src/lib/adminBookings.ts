@@ -76,6 +76,13 @@ export async function confirmBooking(booking: AdminBooking, finalAmount?: number
   return null;
 }
 
+// Reverses a payment confirmation made by mistake: the booking goes back to
+// Pending Payment and the recorded payment is voided.
+export async function undoConfirmation(booking: AdminBooking): Promise<string | null> {
+  const { error } = await supabase.rpc('admin_undo_confirmation', { p_booking_id: booking.id });
+  return error?.message ?? null;
+}
+
 export async function issueRefund(booking: AdminBooking): Promise<string | null> {
   await supabase.from('payments').update({
     payment_status: 'Refunded',

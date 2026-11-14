@@ -4,7 +4,7 @@ import { Receipt, X } from 'lucide-react';
 import { useToast } from '@/context/ToastContext';
 import { bookingDisplayName, formatCurrency, formatDate, formatDateTime, formatTime } from '@/lib/format';
 import { getReceiptSignedUrl } from '@/lib/receipts';
-import { amountDue, confirmBooking, issueRefund, saveAdminNotes, updateBookingStatus, type AdminBooking } from '@/lib/adminBookings';
+import { amountDue, confirmBooking, issueRefund, saveAdminNotes, undoConfirmation, updateBookingStatus, type AdminBooking } from '@/lib/adminBookings';
 import { Spinner } from '@/components/LoadingScreen';
 import { PlayerAvatar } from '@/components/PlayerAvatar';
 import { BookingOpsBadge, PaymentOpsBadge } from '@/components/admin/statusBadges';
@@ -21,6 +21,8 @@ export function BookingDetailSheet({ booking, onClose, onChanged }: {
   const [busy, setBusy] = useState(false);
   const [viewing, setViewing] = useState(false);
   const [confirmCancel, setConfirmCancel] = useState(false);
+  const [confirmPay, setConfirmPay] = useState(false);
+  const [confirmUndo, setConfirmUndo] = useState(false);
   const [amount, setAmount] = useState(amountDue(booking).toString());
   const [notes, setNotes] = useState(booking.admin_notes || '');
   const [savingNotes, setSavingNotes] = useState(false);
@@ -155,7 +157,26 @@ export function BookingDetailSheet({ booking, onClose, onChanged }: {
 
         {/* Actions */}
         <footer className="space-y-2 border-t border-ink-600 p-5">
-          {confirmCancel ? (
+          {confirmPay ? (
+            <div className="space-y-2">
+              <p className="text-sm text-slate-300">
+                Confirm that {formatCurrency(parseFloat(amount) || 0)} was received from {name}?
+                {!booking.receipt_path && <span className="mt-1 block font-semibold text-amber-300">No receipt was uploaded. Only confirm if you were paid (for example in cash).</span>}
+              </p>
+              <div className="flex gap-2">
+                <button onClick={() => setConfirmPay(false)} className="adm-btn flex-1 !py-2.5">Back</button>
+                <button onClick={() => run(() => confirmBooking(booking, parseFloat(amount) || 0), 'Payment verified. Booking confirmed.')} disabled={busy} className="flex-1 rounded-md bg-green-600 py-2.5 font-bold text-white hover:bg-green-700 disabled:opacity-60">Yes, confirm</button>
+              </div>
+            </div>
+          ) : confirmUndo ? (
+            <div className="space-y-2">
+              <p className="text-sm text-slate-300">Undo this confirmation? The booking goes back to Pending payment, the recorded payment is voided and {name} is told payment is still needed.</p>
+              <div className="flex gap-2">
+                <button onClick={() => setConfirmUndo(false)} className="adm-btn flex-1 !py-2.5">Keep confirmed</button>
+                <button onClick={() => run(() => undoConfirmation(booking), 'Confirmation undone. Back to pending payment.')} disabled={busy} className="flex-1 rounded-md bg-amber-500 py-2.5 font-bold text-ink hover:bg-amber-400 disabled:opacity-60">Yes, undo</button>
+              </div>
+            </div>
+          ) : confirmCancel ? (
             <div className="space-y-2">
               <p className="text-sm text-slate-300">Cancel this booking? The player loses the slot.</p>
               <div className="flex gap-2">
@@ -167,7 +188,7 @@ export function BookingDetailSheet({ booking, onClose, onChanged }: {
             <>
               {unpaid && !cancelled && (
                 <button
-                  onClick={() => run(() => confirmBooking(booking, parseFloat(amount) || 0), 'Payment verified. Booking confirmed.')}
+                  onClick={() => setConfirmPay(true)}
                   disabled={busy || !amount}
                   className="flex w-full items-center justify-center gap-2 rounded-md bg-green-600 py-3 font-display text-lg font-bold uppercase tracking-wider text-white transition-colors hover:bg-green-700 disabled:opacity-60"
                 >
@@ -175,6 +196,9 @@ export function BookingDetailSheet({ booking, onClose, onChanged }: {
                 </button>
               )}
               <div className="flex flex-wrap gap-2">
+                {booking.booking_status === 'Confirmed' && booking.payment_status === 'Paid' && booking.total_amount > 0 && (
+                  <button onClick={() => setConfirmUndo(true)} disabled={busy} className="adm-btn flex-1 !border-amber-500/50 !text-amber-300">Undo confirmation</button>
+                )}
                 {booking.payment_status === 'Paid' && booking.booking_status !== 'Refunded' && (
                   <button onClick={() => run(() => issueRefund(booking), 'Refund recorded')} disabled={busy} className="adm-btn flex-1">Record refund</button>
                 )}
