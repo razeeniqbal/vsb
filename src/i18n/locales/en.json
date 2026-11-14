@@ -249,6 +249,7 @@
     "errorAgree": "Please agree to the booking and cancellation policy",
     "errorSessionNotFound": "Session not found",
     "errorFullyBooked": "Sorry, this session is fully booked",
+    "errorQueue": "Free places go to the waiting list first. Join the waiting list and you'll be booked in when it's your turn.",
     "errorAlreadyBooked": "You already have an active booking for this session",
     "errorFailedBooking": "Failed to create booking",
     "companionsTitle": "Bringing friends?",
@@ -512,6 +513,7 @@
       "whatToKnow": "What to know",
       "venue": "Venue",
       "sessionType": "Session type",
+      "heldForWaitlist": "Open places are being held for people on the waiting list. You can only book once it's your turn.",
       "waitlistAuto": "We'll book you in automatically when a place opens, and let you know.",
       "fullNote": "Fully booked. Join the waiting list and you are booked in automatically when a place opens."
     },

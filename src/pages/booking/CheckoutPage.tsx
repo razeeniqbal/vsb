@@ -202,7 +202,7 @@ export default function CheckoutPage() {
     const { data: bookings, error } = await supabase.from('bookings').insert(rows).select();
 
     if (error || !bookings || bookings.length === 0) {
-      show(error?.message || t('checkout.errorFailedBooking'), 'error');
+      show(error?.code === '23514' && error.message.includes('waiting list') ? t('checkout.errorQueue') : error?.message || t('checkout.errorFailedBooking'), 'error');
       setSubmitting(false);
       return;
     }

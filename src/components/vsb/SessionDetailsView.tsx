@@ -70,7 +70,13 @@ export function SessionDetailsView({ session, players, waiting = [], settings, n
       ) : <PasskeyGate sessionId={session.id} onUnlocked={onUnlocked} />;
     }
     if (canBook) {
-      return <button onClick={onBook} className={`v2-btn-primary w-full font-display uppercase tracking-wider ${size}`}>{t('v2.sessionDetails.bookMySpot')}</button>;
+      const held = waiting.length > 0 && available <= waiting.length;
+      return (
+        <>
+          <button onClick={onBook} className={`v2-btn-primary w-full font-display uppercase tracking-wider ${size}`}>{t('v2.sessionDetails.bookMySpot')}</button>
+          {held && !compact && <p className="mt-3 text-sm text-amber-300">{t('v2.sessionDetails.heldForWaitlist')}</p>}
+        </>
+      );
     }
     if (status === 'Fully Booked') {
       return onWaitlist ? (
