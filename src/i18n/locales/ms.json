@@ -249,6 +249,7 @@
     "errorAgree": "Sila bersetuju dengan dasar tempahan dan pembatalan",
     "errorSessionNotFound": "Sesi tidak dijumpai",
     "errorFullyBooked": "Maaf, sesi ini sudah penuh ditempah",
+    "errorQueue": "Slot kosong diberi kepada senarai menunggu dahulu. Sertai senarai menunggu dan anda akan ditempah apabila tiba giliran anda.",
     "errorAlreadyBooked": "Anda sudah mempunyai tempahan aktif untuk sesi ini",
     "errorFailedBooking": "Gagal membuat tempahan",
     "companionsTitle": "Bawa kawan?",
@@ -512,6 +513,7 @@
       "whatToKnow": "Perlu tahu",
       "venue": "Tempat",
       "sessionType": "Jenis sesi",
+      "heldForWaitlist": "Slot kosong sedang ditahan untuk senarai menunggu. Anda hanya boleh menempah apabila tiba giliran anda.",
       "waitlistAuto": "Kami akan tempah untuk anda secara automatik apabila ada slot kosong, dan memaklumkan anda.",
       "fullNote": "Penuh. Sertai senarai menunggu dan anda akan ditempah secara automatik apabila ada tempat kosong."
     },
