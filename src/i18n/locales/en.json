@@ -580,7 +580,9 @@
       "adminConsole": "Admin Console",
       "community": "Community",
       "organizerConsole": "Organizer Console",
-      "whatsNew": "What's new"
+      "whatsNew": "What's new",
+      "notifications": "Notifications",
+      "noNotifications": "Nothing new yet."
     },
     "footer": {
       "tagline": "More than a game.",

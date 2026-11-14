@@ -7,6 +7,7 @@ import { LanguageSwitcher } from '@/components/LanguageSwitcher';
 import { VsbLogo } from '@/components/VsbLogo';
 import { PlayerAvatar } from '@/components/PlayerAvatar';
 import { useMyAvatar } from '@/lib/avatars';
+import { NotificationsBell } from '@/components/NotificationsBell';
 import { openWhatsNew } from '@/lib/whatsNew';
 
 // VSB Play navigation. Primary areas only — routes are not navigation.
@@ -70,6 +71,8 @@ export function Navbar() {
         <div className="flex items-center gap-2 sm:gap-3">
           <LanguageSwitcher className="hidden sm:inline-flex" />
           {profile ? (
+            <>
+            <NotificationsBell />
             <div className="relative" ref={menuRef} onKeyDown={onMenuKey}>
               <button
                 onClick={() => setMenuOpen((o) => !o)}
@@ -104,6 +107,7 @@ export function Navbar() {
                 </div>
               )}
             </div>
+            </>
           ) : (
             <>
               <LanguageSwitcher className="sm:hidden" />
