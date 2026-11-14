@@ -7,6 +7,7 @@ import { Spinner } from '@/components/LoadingScreen';
 import { PlayerAvatar } from '@/components/PlayerAvatar';
 import { AdminPageHeader } from '@/components/admin/AdminUI';
 import { BookingOpsBadge, PaymentOpsBadge } from '@/components/admin/statusBadges';
+import { whatsappLink } from '@/lib/settings';
 import { BookingDetailSheet } from '@/components/admin/BookingDetailSheet';
 import type { Session } from '@/types/database';
 import { useAvatarMap } from '@/lib/avatars';
@@ -37,6 +38,16 @@ function shortDate(iso: string) {
 
 // Also rendered inside the session workspace (Bookings tab) with `sessionId`,
 // which locks the session filter and drops the page-level header.
+// A ready-to-send WhatsApp nudge for someone who holds a place but hasn't paid
+// (typically just moved up from the waiting list). Null when there's nothing to chase.
+function payReminder(b: AdminBooking): string | null {
+  const phone = b.is_guest ? b.guest_phone : b.profile.phone_number;
+  if (!phone || b.booking_status !== 'Pending Payment' || b.receipt_path || b.payment_status === 'Paid') return null;
+  const name = bookingDisplayName(b, b.profile);
+  const text = `Hi ${name}, ada slot kosong untuk "${b.session.title}" (${shortDate(b.session.session_date)}) dan awak dah ditempah. Sila bayar ${formatCurrency(amountDue(b))} & upload resit di ${window.location.origin}/bookings dalam masa 12 jam, kalau tak slot akan diberi kepada orang seterusnya. 🏐`;
+  return whatsappLink(phone, text);
+}
+
 export default function AdminBookingsPage({ sessionId }: { sessionId?: string } = {}) {
   const scope = useConsoleScope();
   const [bookings, setBookings] = useState<AdminBooking[]>([]);
@@ -235,7 +246,10 @@ export default function AdminBookingsPage({ sessionId }: { sessionId?: string } 
                       </td>
                       <td className="text-right font-display text-lg font-bold text-chalk">{formatCurrency(amountDue(b))}</td>
                       <td className="text-right">
-                        <button onClick={(e) => { e.stopPropagation(); setSelected(b); }} className="adm-btn">View</button>
+                        <span className="inline-flex items-center gap-2">
+                          {payReminder(b) && <a href={payReminder(b)!} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="adm-btn">WhatsApp</a>}
+                          <button onClick={(e) => { e.stopPropagation(); setSelected(b); }} className="adm-btn">View</button>
+                        </span>
                       </td>
                     </tr>
                   );
@@ -260,6 +274,7 @@ export default function AdminBookingsPage({ sessionId }: { sessionId?: string } 
                         <div className="mt-1.5 flex flex-wrap gap-1.5"><BookingOpsBadge status={b.booking_status} /><PaymentOpsBadge booking={b} /></div>
                       </div>
                     </button>
+                    {payReminder(b) && <a href={payReminder(b)!} target="_blank" rel="noopener noreferrer" className="adm-btn mb-3 ml-[3.25rem]">WhatsApp reminder</a>}
                   </li>
                 );
               })}

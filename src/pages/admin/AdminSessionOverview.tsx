@@ -102,7 +102,7 @@ export default function AdminSessionOverview() {
             adding ? (
               <div className="mb-5 border border-ink-600 bg-ink-800 p-4">
                 <p className="adm-label mb-1">Add players</p>
-                <p className="mb-3 text-xs text-slate-400">Confirmed places with no payment. {spotsLeft} spot{spotsLeft === 1 ? '' : 's'} left.</p>
+                <p className="mb-3 text-xs text-slate-400">Booked free (RM0, marked Paid): these players won't be asked to pay. Anyone who should pay needs to book themselves. {spotsLeft} spot{spotsLeft === 1 ? '' : 's'} left.</p>
                 <StarterPicker value={picked} onChange={setPicked} max={spotsLeft}
                   excludeIds={active.flatMap((b) => (b.is_guest ? (b.guest_user_id ? [b.guest_user_id] : []) : [b.user_id]))} />
                 <div className="mt-4 flex gap-2">

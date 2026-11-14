@@ -96,7 +96,9 @@ export async function saveAdminNotes(bookingId: string, notes: string): Promise<
 
 // Payment state derived from the booking row: a pending booking with a receipt
 // is waiting on the admin; without one it's waiting on the player.
-export function paymentState(b: Pick<Booking, 'payment_status' | 'booking_status' | 'receipt_path'>): [OpsTone, string] {
+export function paymentState(b: Pick<Booking, 'payment_status' | 'booking_status' | 'receipt_path'> & { total_amount?: number }): [OpsTone, string] {
+  // Starters are booked free (RM0, marked Paid): say so, so it's never mistaken for a payment.
+  if (b.payment_status === 'Paid' && b.total_amount === 0) return ['info', 'Free · starter'];
   if (b.payment_status === 'Paid') return ['good', 'Paid'];
   if (b.payment_status === 'Refunded' || b.payment_status === 'Partially Refunded') return ['neutral', 'Refunded'];
   if (b.booking_status.includes('Cancelled')) return ['neutral', 'Not paid'];

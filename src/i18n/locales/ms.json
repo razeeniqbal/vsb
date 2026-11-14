@@ -580,7 +580,9 @@
       "adminConsole": "Konsol Admin",
       "community": "Komuniti",
       "organizerConsole": "Konsol Penganjur",
-      "whatsNew": "Apa yang baharu"
+      "whatsNew": "Apa yang baharu",
+      "notifications": "Notifikasi",
+      "noNotifications": "Tiada yang baharu lagi."
     },
     "footer": {
       "tagline": "Lebih dari permainan.",

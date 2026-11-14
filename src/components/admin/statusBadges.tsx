@@ -20,7 +20,7 @@ export function BookingOpsBadge({ status }: { status: BookingStatus }) {
   return <OpsBadge tone={tone}>{label}</OpsBadge>;
 }
 
-export function PaymentOpsBadge({ booking }: { booking: Pick<Booking, 'payment_status' | 'booking_status' | 'receipt_path'> }) {
+export function PaymentOpsBadge({ booking }: { booking: Pick<Booking, 'payment_status' | 'booking_status' | 'receipt_path'> & { total_amount?: number } }) {
   const [tone, label] = paymentState(booking);
   return <OpsBadge tone={tone}>{label}</OpsBadge>;
 }

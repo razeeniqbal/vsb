@@ -177,6 +177,7 @@ export interface Notification {
   delivery_channel: 'in_app' | 'email' | 'whatsapp' | 'sms' | 'push';
   delivery_status: 'Pending' | 'Sent' | 'Failed';
   sent_at: string | null;
+  read_at?: string | null;
   created_at: string;
 }
 
